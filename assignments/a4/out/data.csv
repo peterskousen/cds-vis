@@ -1,6 +1,4 @@
-,Decade,Faces freq.,Pages,% of pages
-0,1820,0,26,0.0
-1,1830,1,54,1.85
-2,1840,1,50,2.0
-3,1850,2,48,4.17
-4,1860,3,22,13.64
+Decade,Paper,Faces freq.,Pages,% of pages
+1790,GDL,1,10,10.0
+1820,JDG,0,10,0.0
+1880,IMP,0,10,0.0

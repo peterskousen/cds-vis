@@ -1,4 +1,6 @@
-matplotlib
-numpy
-facenet-pytorch
-pandas
+pillow==10.2.0
+tqdm==4.66.4
+matplotlib==3.9.0
+numpy==1.26.4
+facenet-pytorch==2.6.0
+pandas==2.2.2
