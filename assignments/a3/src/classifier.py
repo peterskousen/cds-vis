@@ -11,7 +11,7 @@ from tensorflow.keras.layers import (Flatten,
                                      BatchNormalization)
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, Adam
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import classification_report
@@ -84,6 +84,7 @@ def init_model():
 
     sgd = SGD(
         learning_rate=lr_schedule)
+    #adam = Adam()
 
     model.compile(
         optimizer=sgd,

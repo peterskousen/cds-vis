@@ -1,8 +1,4 @@
 matplotlib
-scikit-learn
 numpy
-pandas
 facenet-pytorch
-opencv-python
-tensorflow-cpu
-tensorflow-hub
+pandas
