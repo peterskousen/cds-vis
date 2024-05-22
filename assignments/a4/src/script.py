@@ -4,10 +4,13 @@ import copy
 import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
+
+''' This solves an error with some corrupted files in the dataset not accepted by Pillow'''
+ImageFile.LOAD_TRUNCATED_IMAGES = True 
 from PIL import ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 from tqdm.auto import tqdm
-from facenet_pytorch import MTCNN, InceptionResnetV1
+from facenet_pytorch import MTCNN
 
 def define_path():
     inpath = os.path.join("in", "newspapers")
@@ -22,11 +25,11 @@ def process_images(inpath, mtcnn):
     print("Processing images...")
     results = []
     for newspaper in os.listdir(inpath):
-        print(f'Processing {newspaper}...')
+        print(f'Currently processing folder: {newspaper}...')
         paper_path = sorted(os.listdir(os.path.join(inpath, newspaper)))
-        for page in tqdm(paper_path[:10], position=0, leave=True):
+        for page in tqdm(paper_path, position=0, leave=True):
             '''
-            Some image data are corrupted and do not work with Pillow. The following exception handler skips affected files.
+                - Some image data are corrupted and do not work with Pillow. The following exception handler skips affected files.
             '''
             try:
                 img = Image.open(os.path.join(inpath, newspaper, page))
@@ -38,10 +41,11 @@ def process_images(inpath, mtcnn):
     return results
 
 
-def convert_array_values(results):
+def convert_list_values(results):
     '''
-    Convert list values of type None to int; 
-    transform list shape to a single int representing amount of faces detected for a given image
+        - The MTCNN returns embeddings as a list of bounding box coordinates.
+        - If no faces are detected, MTCNN returns None; these values are converted to an int (i.e. 0);
+        - Detected faces are returned as a list of floats representing bounding box coordinates; These are converted to an int describing the amount of faces.
     '''
     for obj in results:
         if obj[1] is None:
@@ -53,8 +57,12 @@ def convert_array_values(results):
 
 def process_dataframe(results, outpath):
     '''
-    Process face detection results into dataframes 
+        - Processes face detection results into a dataframe
+        - Extracts newspaper name and decade from the file name
+        - Sorts df by decade and groups all entries by decade and newspaper
+        - Calculates % of pages w/ faces
     '''
+
     df = pd.DataFrame(results, columns=["Pages", "Faces freq."])
     df['Year'] = df['Pages'].str.extract(r'-(\d{4})-').astype(int)
     df['Paper'] = df['Pages'].str.extract(r'^([A-Z]{3})-').astype(str)
@@ -75,10 +83,10 @@ def process_dataframe(results, outpath):
 
 def plot_data(grouped_df, outpath):
     '''
-    Plot frequency of faces in relation to decade for all three newspapers
+    Plot % of faces / page / decade for all three newspapers
     '''
     papers = grouped_df['Paper'].unique()
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(12, 4))
     for paper in papers:
         paper_df = grouped_df[grouped_df['Paper'] == paper]
         plt.plot(paper_df['Decade'], paper_df['% of pages'], label=paper)
@@ -99,7 +107,7 @@ def main():
 
     results = process_images(inpath, mtcnn)
 
-    results = count_faces_pages(results)
+    results = convert_list_values(results)
 
     grouped_df = process_dataframe(results, outpath)
 
