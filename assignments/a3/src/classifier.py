@@ -42,7 +42,9 @@ def process_images(path_in):
     return np.array(data), np.array(labels)
 
 def encocde_labels(path_in, y_train_, y_test_):
-    """create one-hot encodings"""
+    '''
+    create one-hot encodings
+    '''
     lb = LabelBinarizer()
 
     y_train = lb.fit_transform(y_train_)
@@ -55,23 +57,26 @@ def encocde_labels(path_in, y_train_, y_test_):
     return y_train, y_test, labelNames
 
 def init_model():
-    # Load VGG16 model; freeze convolutional layers; remove existing classification layers and add new
+    '''
+    Initializes VGG16 model with custom classifier layers
+    '''
     tf.keras.backend.clear_session()
-
+    # Loads the VGG16 model without the fully connected top layers, 
+    # sets the input shape to match the processed images = 224 X 224 X 3
     model = VGG16(include_top=False,
                 pooling='avg',
                 input_shape=(224, 224, 3))
 
-    # mark loaded layers as not trainable
+    # Marks loaded layers as not trainable
     for layer in model.layers:
         layer.trainable = False
 
-    # add new classifier layers
+    # Adds new classifier layers on top of the pre-trained VGG16 model
     flat1 = Flatten()(model.layers[-1].output)
     class1 = Dense(128, activation='relu')(flat1)
     output = Dense(10, activation='softmax')(class1)
 
-    # define new model
+    # Defines new model with the added layers 
     model = Model(inputs=model.inputs, 
                 outputs=output)
     print("Compiling model...")
@@ -84,7 +89,6 @@ def init_model():
 
     sgd = SGD(
         learning_rate=lr_schedule)
-    #adam = Adam()
 
     model.compile(
         optimizer=sgd,
