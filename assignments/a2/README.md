@@ -95,6 +95,9 @@ bash run_lrc.sh
    ```
 
 ## Key Points from the Outputs:
+
+![Learning curve](out/plot.png)
+
 <table>
   <tr>
     <td style="width: 50%; font-size: 12px;">
@@ -142,6 +145,7 @@ bash run_lrc.sh
 </tr>
 </table>
 
+Regarding the loss curve of the neural network during training the generated plot shows a steadily declining curve with each epoch. This indicates that the model is correctly learning and improving perfomance over time, i.e., the difference between the predicted outputs of the model and the labels of the dataset is reduced with each forward pass and backpropagation.
 
 Upon assessment of the classifications reports, it is evident that while both models score relatively low across all measures, the general trend is that the neural network appears to perform slightly better across the board when i comes to classifying the images contained within `Cifar10`; F1-scores are all higher for the MLP classifier with the highest score being 0.41 (ship) and the lowest being 0.19 (cat/deer). In contrast, the highest F1-score for the logistic regression is 0.35 (truck) while the lowest score reaches 0.15 (cat).
 
