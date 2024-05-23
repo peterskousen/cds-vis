@@ -1,6 +1,8 @@
 # A1: Building a simple image search algorithm
 ## Overview
 
+This project consists of a basic image search algorithm which takes a user-defined image, compares it to all other images in the dataset and returns a list of the five most similar images based on histogram similarity. This is done by utilizing OpenCV's `calcHist()`, `normalize()` and `compareHist()` functions. These functions 1: calculates histograms of all images 2: normalizes the histogram values, ensuring their mutual compatibility and 3: calculates the chi-square distance between images. <br>
+Lastly, `Pandas` is used to create a dataframe of the calculated distances between images and save it as a CSV file.
 
 ## Table of Contents
 
@@ -83,3 +85,7 @@ Then, run *img_search.py* with an argument for the image file to base the image 
 | image_0248.jpg  | 2.47     |
 | image_0247.jpg  | 2.47     |
 | image_0791.jpg  | 2.56     |
+
+The resulting dataframe displays the individual filenames along with ther computed chi-square distance to the target image selected by the user. The smaller the values, the more similar the color distributions of the images are. 
+
+While this approach appears to work quite nicely on a smaller, quite homogenous dataset such as the 17 Category Flower Dataset which contains classes that each have a very distinctive color palette, it is important to stress that this analysis only compares the distribution of pixel values between images, and not any other distinct features that an image might contain. Therefore, if one had to be able to compare more different classes of images with each other, more advanced machine learning pipelines would be necessary to ensure proper performance. 
