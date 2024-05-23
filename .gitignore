@@ -1,3 +1,5 @@
 # Environments
 .venv
-in/
+in/*
+!in/.gitkeep
+/cds-visual
