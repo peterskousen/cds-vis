@@ -1,6 +1,7 @@
 import os
 import cv2
 import pandas as pd
+from tqdm import tqdm
 
 def process_image(folder_path, image_to_compare):
     images = os.listdir(folder_path)
@@ -26,7 +27,8 @@ def process_image(folder_path, image_to_compare):
         # Append the computed distance to the list
         dist.append((image, new_dist))
     
-    for image in images:
+    print("Finding similar images...")
+    for image in tqdm(images):
         if image != image_to_compare:
             comp_hist(image)
     
@@ -34,3 +36,10 @@ def process_image(folder_path, image_to_compare):
     dist = dist[:6]
     df = pd.DataFrame(dist, columns=["Filename", "Distance"])
     df.to_csv("out/similar_images.csv", index=False)
+    print("Image search completed. Results saved to out folder")
+
+if __name__ == "__main__":
+    image_to_compare = input(f'Enter the filename # of the image to compare: image_')
+    image_to_compare = 'image_' + image_to_compare + '.jpg'
+    input_path = os.path.join("in", "flowers")
+    process_image(input_path, image_to_compare)
